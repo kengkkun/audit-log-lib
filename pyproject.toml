@@ -26,8 +26,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/vialink/library.audit-log"
-Repository = "https://github.com/vialink/library.audit-log"
+Homepage = "https://github.com/kengkkun"
+Repository = "https://github.com/kengkkun/audit-log-lib"
 
 [project.optional-dependencies]
 dev = [
