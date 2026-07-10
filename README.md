@@ -40,6 +40,8 @@ Example:
 MONGO_CONNECTION_STRING=mongodb://username:password@localhost:27017/audit_db?authSource=admin
 ```
 
+If your MongoDB server has authentication enabled, the connection string must include valid credentials. A URI like `mongodb://localhost:27017/audit_db` will connect, but writes will fail with `Command insert requires authentication`.
+
 ### Optional config
 
 - `database_name`: Explicit database name. If omitted, the library uses the database from the connection string.
@@ -79,8 +81,15 @@ import os
 from audit_log_lib import AuditLogCreate, AuditLogRepository
 
 
+def require_env(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+
 repository = AuditLogRepository(
-    connection_string=os.environ["MONGO_CONNECTION_STRING"],
+    connection_string=require_env("MONGO_CONNECTION_STRING"),
     database_name="audit_db",
     collection_name="audit_trails",
 )
@@ -116,15 +125,15 @@ async def get_one(uid: str):
 ## Get as list
 
 ```python
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 
 async def get_logs():
     return await repository.get_by_owner(
         owner_uid="company-001",
         username="alice",
-        start_date=datetime.utcnow() - timedelta(days=7),
-        end_date=datetime.utcnow(),
+        start_date=datetime.now(UTC) - timedelta(days=7),
+        end_date=datetime.now(UTC),
         search_keyword="order",
         skip=0,
         limit=50,
@@ -186,7 +195,7 @@ from audit_log_lib import AuditLogCreate, AuditLogRepository
 app = FastAPI()
 
 audit_repository = AuditLogRepository(
-    connection_string=os.environ["MONGO_CONNECTION_STRING"],
+    connection_string=require_env("MONGO_CONNECTION_STRING"),
     database_name="audit_db",
 )
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
 
@@ -34,7 +34,7 @@ class AuditLogRepository:
     async def create(self, *, obj_in: AuditLogCreate) -> AuditLogRecord:
         payload = _model_to_dict(obj_in)
         payload["uid"] = str(uuid4())
-        payload["created_at"] = datetime.utcnow()
+        payload["created_at"] = datetime.now(UTC)
         await self.collection.insert_one(payload)
         return AuditLogRecord(**payload)
 

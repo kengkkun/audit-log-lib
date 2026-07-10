@@ -4,10 +4,21 @@ from fastapi import FastAPI
 
 from audit_log_lib import AuditLogCreate, AuditLogRepository
 
+
+def _require_env(name: str) -> str:
+    value = os.getenv(name)
+    if not value:
+        raise RuntimeError(
+            f"Missing required environment variable {name}. "
+            "Set it to an authenticated MongoDB URI."
+        )
+    return value
+
+
 app = FastAPI()
 
 repository = AuditLogRepository(
-    connection_string=os.environ["MONGO_CONNECTION_STRING"],
+    connection_string=_require_env("MONGO_CONNECTION_STRING"),
     database_name=os.getenv("MONGO_DATABASE_NAME", "audit_db"),
     collection_name=os.getenv("MONGO_COLLECTION_NAME", "audit_trails"),
 )
