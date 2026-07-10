@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "library.audit-log"
+version = "0.1.0"
+description = "Async MongoDB-backed audit log library with create, list, and pagination support."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "K. Weangchai" }
+]
+dependencies = [
+    "motor>=3.6.0,<4.0.0",
+    "pydantic>=1.10,<3.0",
+]
+keywords = ["audit-log", "mongodb", "motor", "pagination", "asyncio"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
+    "Framework :: AsyncIO",
+]
+
+[project.urls]
+Homepage = "https://github.com/vialink/library.audit-log"
+Repository = "https://github.com/vialink/library.audit-log"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/audit_log_lib"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src/audit_log_lib",
+    "/README.md",
+    "/examples",
+    "/tests",
+]
